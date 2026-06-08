@@ -65,23 +65,23 @@
 
 ### 3.2 技术选型
 
-| 层次 | 技术 | 选型理由 |
-|------|------|----------|
-| **前端框架** | Vue 3 + TypeScript (Composition API) | 学习曲线平缓，SFC 单文件组件直觉友好，适合三面板布局 |
-| **前端 UI 库** | Tailwind CSS + Naive UI | Naive UI 设计感强，与 NotebookLM 简约风格契合；Tailwind 提供灵活的原子化样式 |
-| **前端状态管理** | Pinia | Vue 3 官方推荐，TypeScript 支持好，适合三面板间的状态共享 |
-| **后端框架** | Python FastAPI | 异步支持好，自带 OpenAPI 文档，与 Python ML/AI 生态无缝对接 |
-| **文档解析** | PyMuPDF (PDF) + python-docx (Word) + 内置 (TXT) | PyMuPDF 解析 PDF 质量高；python-docx 处理 .docx 办公文档；轻量无额外依赖 |
-| **文本分块** | LangChain Text Splitters | 提供 RecursiveCharacterTextSplitter，支持重叠分块，中英文兼容 |
-| **Embedding 模型** | OpenAI text-embedding-3-small / BAAI bge-small-zh (本地备选) | 前者精度高，后者可离线部署，按需切换 |
-| **向量数据库** | ChromaDB | Python 原生，零配置启动，适合开发和小规模部署 |
-| **LLM** | DeepSeek V4 Pro (主) / 兼容 OpenAI 接口 | 1M 上下文窗口，成本可控，Agent 能力优秀 |
-| **对话记忆** | SQLite + 会话级上下文管理 | 轻量，无需额外部署；按文档隔离对话历史 |
-| **多模态生成** | 音频: Edge-TTS / OpenAI TTS | 文字转语音，自然度高 |
-|  | 脑图: Markmap (前端渲染) | 从 Markdown 生成思维导图，纯前端方案 |
-|  | PPT: python-pptx | 服务端生成 .pptx 文件 |
-| **联网搜索** | Tavily Search API / DuckDuckGo | 补充外部知识来源 |
-| **任务队列** | Celery + Redis (可选，多模态生成异步化) | 音频/PPT 生成耗时较长，异步处理避免阻塞 |
+| 层次               | 技术                                                         | 选型理由                                                                     |
+| ------------------ | ------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| **前端框架**       | Vue 3 + TypeScript (Composition API)                         | 学习曲线平缓，SFC 单文件组件直觉友好，适合三面板布局                         |
+| **前端 UI 库**     | Tailwind CSS + ShadCN UI (shadcn-vue)                        | 极简设计，源码级定制，与 NotebookLM 安静精致的视觉风格高度契合               |
+| **前端状态管理**   | Pinia                                                        | Vue 3 官方推荐，TypeScript 支持好，适合三面板间的状态共享                    |
+| **后端框架**       | Python FastAPI                                               | 异步支持好，自带 OpenAPI 文档，与 Python ML/AI 生态无缝对接                  |
+| **文档解析**       | PyMuPDF (PDF) + python-docx (Word) + 内置 (TXT)              | PyMuPDF 解析 PDF 质量高；python-docx 处理 .docx 办公文档；轻量无额外依赖     |
+| **文本分块**       | LangChain Text Splitters                                     | 提供 RecursiveCharacterTextSplitter，支持重叠分块，中英文兼容                |
+| **Embedding 模型** | OpenAI text-embedding-3-small / BAAI bge-small-zh (本地备选) | 前者精度高，后者可离线部署，按需切换                                         |
+| **向量数据库**     | ChromaDB                                                     | Python 原生，零配置启动，适合开发和小规模部署                                |
+| **LLM**            | DeepSeek V4 Pro (主) / 兼容 OpenAI 接口                      | 1M 上下文窗口，成本可控，Agent 能力优秀                                      |
+| **对话记忆**       | SQLite + 会话级上下文管理                                    | 轻量，无需额外部署；按文档隔离对话历史                                       |
+| **多模态生成**     | 音频: Edge-TTS / OpenAI TTS                                  | 文字转语音，自然度高                                                         |
+|                    | 脑图: Markmap (前端渲染)                                     | 从 Markdown 生成思维导图，纯前端方案                                         |
+|                    | PPT: python-pptx                                             | 服务端生成 .pptx 文件                                                        |
+| **联网搜索**       | Tavily Search API / DuckDuckGo                               | 补充外部知识来源                                                             |
+| **任务队列**       | Celery + Redis (可选，多模态生成异步化)                      | 音频/PPT 生成耗时较长，异步处理避免阻塞                                      |
 
 ### 3.3 后端架构设计
 
@@ -160,21 +160,21 @@ backend/
 
 #### 3.3.3 API 路由设计
 
-| 方法 | 路径 | 功能 |
-|------|------|------|
-| `POST` | `/api/documents/upload` | 上传 PDF/TXT 文档 |
-| `GET` | `/api/documents` | 获取文档列表 |
-| `DELETE` | `/api/documents/{id}` | 删除文档及向量数据 |
-| `POST` | `/api/sources/text` | 手动添加文本来源 |
-| `POST` | `/api/sources/search` | 联网搜索添加来源 |
-| `POST` | `/api/conversations` | 创建新对话 |
-| `GET` | `/api/conversations?doc_id=` | 获取文档下的对话列表 |
-| `POST` | `/api/chat/ask` | 发送消息 (RAG 问答) |
-| `GET` | `/api/chat/{conv_id}/messages` | 获取对话历史 |
-| `POST` | `/api/studio/audio` | 生成音频概述 (用户主动触发) |
-| `POST` | `/api/studio/mindmap` | 生成思维导图 Markdown (用户主动触发) |
-| `POST` | `/api/studio/ppt` | 生成 PPT 文件 (用户主动触发) |
-| `GET` | `/api/studio/files` | 获取已生成的多模态文件列表 |
+| 方法     | 路径                           | 功能                                 |
+| -------- | ------------------------------ | ------------------------------------ |
+| `POST`   | `/api/documents/upload`        | 上传 PDF/TXT 文档                    |
+| `GET`    | `/api/documents`               | 获取文档列表                         |
+| `DELETE` | `/api/documents/{id}`          | 删除文档及向量数据                   |
+| `POST`   | `/api/sources/text`            | 手动添加文本来源                     |
+| `POST`   | `/api/sources/search`          | 联网搜索添加来源                     |
+| `POST`   | `/api/conversations`           | 创建新对话                           |
+| `GET`    | `/api/conversations?doc_id=`   | 获取文档下的对话列表                 |
+| `POST`   | `/api/chat/ask`                | 发送消息 (RAG 问答)                  |
+| `GET`    | `/api/chat/{conv_id}/messages` | 获取对话历史                         |
+| `POST`   | `/api/studio/audio`            | 生成音频概述 (用户主动触发)          |
+| `POST`   | `/api/studio/mindmap`          | 生成思维导图 Markdown (用户主动触发) |
+| `POST`   | `/api/studio/ppt`              | 生成 PPT 文件 (用户主动触发)         |
+| `GET`    | `/api/studio/files`            | 获取已生成的多模态文件列表           |
 
 ### 3.4 前端架构设计 (Vue 3)
 
@@ -253,7 +253,7 @@ Studio 面板 (多模态生成):
 
 ### 3.5 数据存储设计
 
-#### SQLite 表结构
+#### SQLite 表结构（用于对话记忆）
 
 ```sql
 -- 文档表
@@ -322,16 +322,16 @@ studio_tasks (
 
 ### 3.6 开发阶段划分
 
-| 阶段 | 内容 | 预计产物 |
-|------|------|----------|
-| **Phase 1: 基础搭建** | 项目脚手架（Vue3 + Vite / FastAPI）、目录初始化、依赖安装 | 前后端可启动的空框架 |
-| **Phase 2: 前端界面** | 三面板布局、Source/Community/Studio 组件、Mock 数据交互 | 完整前端 UI 可预览（无需后端） |
-| **Phase 3: 后端基础** | FastAPI 路由、文档上传/解析（PDF/TXT/Word）、SQLite + ChromaDB 初始化 | API 可用，Swagger 可测试 |
-| **Phase 4: 前后端联调** | 前端接入真实 API、上传进度、来源列表、对话交互 | 前端不再依赖 Mock 数据 |
-| **Phase 5: RAG 核心** | 文本分块、向量化、检索、LLM 生成、引用标注、流式返回 | 核心问答功能完整可用 |
-| **Phase 6: 对话增强** | 多轮历史管理、上下文窗口、新建/切换对话 | 完整对话体验 |
-| **Phase 7: 多模态输出** | 音频生成、脑图渲染、PPT 导出（仅在用户主动触发时执行） | Studio 面板功能完整 |
-| **Phase 8: 打磨与部署** | UI 细节打磨、引用高亮、响应式适配、Docker 化部署 | 可交付的完整系统 |
+| 阶段                    | 内容                                                                  | 预计产物                       |
+| ----------------------- | --------------------------------------------------------------------- | ------------------------------ |
+| **Phase 1: 基础搭建**   | 项目脚手架（Vue3 + Vite / FastAPI）、目录初始化、依赖安装             | 前后端可启动的空框架           |
+| **Phase 2: 前端界面**   | 三面板布局、Source/Community/Studio 组件、Mock 数据交互               | 完整前端 UI 可预览（无需后端） |
+| **Phase 3: 后端基础**   | FastAPI 路由、文档上传/解析（PDF/TXT/Word）、SQLite + ChromaDB 初始化 | API 可用，Swagger 可测试       |
+| **Phase 4: 前后端联调** | 前端接入真实 API、上传进度、来源列表、对话交互                        | 前端不再依赖 Mock 数据         |
+| **Phase 5: RAG 核心**   | 文本分块、向量化、检索、LLM 生成、引用标注、流式返回                  | 核心问答功能完整可用           |
+| **Phase 6: 对话增强**   | 多轮历史管理、上下文窗口、新建/切换对话                               | 完整对话体验                   |
+| **Phase 7: 多模态输出** | 音频生成、脑图渲染、PPT 导出（仅在用户主动触发时执行）                | Studio 面板功能完整            |
+| **Phase 8: 打磨与部署** | UI 细节打磨、引用高亮、响应式适配、Docker 化部署                      | 可交付的完整系统               |
 
 ### 3.7 关键技术决策说明
 
