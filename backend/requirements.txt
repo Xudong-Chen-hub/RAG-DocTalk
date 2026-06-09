@@ -1,0 +1,32 @@
+# Web Framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.34.0
+python-multipart>=0.0.19
+
+# Database
+chromadb>=0.5.0
+sqlalchemy>=2.0.36
+
+# Document Parsing
+PyMuPDF>=1.25.0
+python-docx>=1.1.0
+
+# Embedding & RAG
+sentence-transformers>=3.3.0
+langchain>=0.3.0
+langchain-text-splitters>=0.3.0
+
+# Auth
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.0
+bcrypt>=4.0.0
+
+# HTTP & CORS
+httpx>=0.28.0
+
+# Environment
+python-dotenv>=1.0.0
+
+# Task Queue (optional, Phase 7)
+# celery>=5.4.0
+# redis>=5.2.0
