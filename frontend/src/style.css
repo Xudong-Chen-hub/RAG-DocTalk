@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+:root {
+  --bg-root: #FAFBF8;
+  --bg-surface: #FFFFFF;
+  --bg-sidebar: #F6F7F4;
+  --bg-hover: #F0F3ED;
+  --ink-primary: #1B1D1A;
+  --ink-secondary: #6B7268;
+  --accent: #6B9B5E;
+  --accent-hover: #597F4E;
+  --border: #E2E5DF;
+  --bubble-user: #F0F3ED;
+  --bubble-ai: #FFFFFF;
+  --cite-highlight: rgba(107, 155, 94, 0.12);
+  --danger: #C2544A;
+}
+
+.dark {
+  --bg-root: #1A1C19;
+  --bg-surface: #242724;
+  --bg-sidebar: #1E201D;
+  --bg-hover: #2D302B;
+  --ink-primary: #E8EAE5;
+  --ink-secondary: #8B9288;
+  --accent: #7DA86F;
+  --accent-hover: #8BBF7D;
+  --border: #2D302B;
+  --bubble-user: #2D302B;
+  --bubble-ai: #242724;
+  --cite-highlight: rgba(125, 168, 111, 0.15);
+  --danger: #D4736A;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-root);
+  color: var(--ink-primary);
+}
+
+#app {
+  min-height: 100vh;
+}
